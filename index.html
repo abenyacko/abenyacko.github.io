@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Andrew Benyacko — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* =====================================================
+   RESET & BASE
+   ===================================================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#0b0f1a;
+  color:#e2e8f0;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;}
+
+/* =====================================================
+   CSS VARIABLES
+   ===================================================== */
+:root{
+  --accent:#00e5b0;
+  --accent2:#f43f5e;
+  --accent3:#818cf8;
+  --bg:#0b0f1a;
+  --s1:#0f1420;   /* about    — dark blue   */
+  --s2:#12100f;   /* skills   — dark warm   */
+  --s3:#0e0b1a;   /* projects — dark purple */
+  --s4:#0a1218;   /* edu      — dark teal   */
+  --s5:#111116;   /* resume   — dark grey   */
+  --s6:#0c1410;   /* contact  — dark green  */
+  --card:#ffffff10;
+  --card-border:#ffffff18;
+  --text:#e2e8f0;
+  --muted:#94a3b8;
+  --mono:'Space Mono',monospace;
+  --display:'Syne',sans-serif;
+}
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px;}
+
+/* =====================================================
+   NOISE + GRID OVERLAY
+   ===================================================== */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:.5;
+}
+
+/* =====================================================
+   PASSWORD MODAL
+   ===================================================== */
+#pw-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(11,15,26,.95);backdrop-filter:blur(12px);
+  align-items:center;justify-content:center;
+}
+#pw-overlay.show{display:flex;}
+#pw-box{
+  background:#161d2e;border:1px solid rgba(0,229,176,.2);
+  padding:2.5rem;width:340px;
+  box-shadow:0 0 60px rgba(0,229,176,.1);
+}
+#pw-box h3{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+#pw-box h3::before{content:'';width:20px;height:1px;background:var(--accent);}
+#pw-field{
+  width:100%;background:#0b0f1a;border:1px solid rgba(255,255,255,.12);
+  color:var(--text);font-family:var(--mono);font-size:.9rem;
+  padding:.8rem 1rem;outline:none;margin-bottom:.6rem;
+  transition:border-color .2s;letter-spacing:.08em;
+}
+#pw-field:focus{border-color:var(--accent);}
+#pw-err{font-family:var(--mono);font-size:.62rem;color:var(--accent2);min-height:1.2rem;margin-bottom:.75rem;letter-spacing:.06em;}
+.pw-btns{display:flex;gap:.6rem;}
+.pw-btn{
+  flex:1;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:.7rem 1rem;cursor:pointer;border:none;transition:all .2s;
+}
+#pw-ok{background:var(--accent);color:#0b0f1a;font-weight:700;}
+#pw-ok:hover{background:#fff;}
+#pw-cancel{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--muted);}
+#pw-cancel:hover{border-color:var(--accent2);color:var(--accent2);}
+
+/* =====================================================
+   EDIT TOOLBAR
+   ===================================================== */
+#ed-bar{
+  display:none;position:fixed;bottom:1.5rem;left:50%;
+  transform:translateX(-50%);z-index:8000;
+  background:#161d2e;border:1px solid var(--accent);
+  padding:.6rem 1.2rem;gap:.6rem;align-items:center;
+  box-shadow:0 4px 24px rgba(0,0,0,.5),0 0 30px rgba(0,229,176,.1);
+  white-space:nowrap;
+}
+#ed-bar.show{display:flex;}
+.eb-label{
+  font-family:var(--mono);font-size:.6rem;color:var(--accent);
+  letter-spacing:.12em;text-transform:uppercase;
+  display:flex;align-items:center;gap:.4rem;
+  padding-right:.8rem;border-right:1px solid rgba(255,255,255,.1);
+}
+.eb-pulse{
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+  animation:pulse-anim 1.4s ease-in-out infinite;
+}
+@keyframes pulse-anim{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
+.eb-btn{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;
+  text-transform:uppercase;padding:.4rem .85rem;cursor:pointer;
+  border:1px solid rgba(255,255,255,.15);background:transparent;
+  color:var(--text);transition:all .2s;
+}
+.eb-btn:hover{border-color:var(--accent);color:var(--accent);}
+#eb-export{background:var(--accent);color:#0b0f1a;font-weight:700;border-color:var(--accent);}
+#eb-export:hover{background:#fff;}
+#eb-lock{border-color:rgba(244,63,94,.3);color:var(--accent2);}
+#eb-lock:hover{border-color:var(--accent2);background:rgba(244,63,94,.08);}
+
+/* =====================================================
+   EDIT MODE — inline editing styles
+   ===================================================== */
+body.editing [contenteditable]{
+  outline:none;cursor:text;
+  transition:box-shadow .15s,background .15s;
+}
+body.editing [contenteditable]:hover:not(:focus){
+  box-shadow:0 0 0 2px rgba(0,229,176,.35);
+  background:rgba(0,229,176,.04);
+}
+body.editing [contenteditable]:focus{
+  box-shadow:0 0 0 2px var(--accent);
+  background:rgba(0,229,176,.07);
+}
+[contenteditable="false"]{cursor:default!important;}
+
+/* Delete / Add buttons — only in edit mode */
+.del-btn{
+  display:none;position:absolute;top:.5rem;right:.5rem;
+  width:22px;height:22px;background:rgba(244,63,94,.15);
+  border:1px solid rgba(244,63,94,.4);color:var(--accent2);
+  font-size:.7rem;cursor:pointer;z-index:10;
+  align-items:center;justify-content:center;transition:all .2s;
+}
+.del-btn:hover{background:var(--accent2);color:#fff;}
+body.editing .del-btn{display:flex;}
+.add-btn{
+  display:none;width:100%;padding:.5rem 1rem;margin-top:.6rem;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  background:transparent;border:1px dashed rgba(0,229,176,.2);
+  color:rgba(0,229,176,.45);cursor:pointer;transition:all .2s;
+}
+.add-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,229,176,.04);}
+body.editing .add-btn{display:block;}
+.del-tag{
+  display:none;background:none;border:none;
+  color:rgba(244,63,94,.7);cursor:pointer;font-size:.7rem;
+  padding:0 0 0 .2rem;line-height:1;transition:color .15s;
+}
+.del-tag:hover{color:var(--accent2);}
+body.editing .del-tag{display:inline;}
+
+/* =====================================================
+   NAV
+   ===================================================== */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 4rem;
+  background:rgba(11,15,26,.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-brand{
+  font-family:var(--mono);font-size:.78rem;color:var(--accent);
+  letter-spacing:.12em;text-transform:uppercase;
+}
+.nav-brand span{color:rgba(255,255,255,.3);}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{
+  font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  letter-spacing:.08em;text-transform:uppercase;
+  position:relative;transition:color .2s;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-3px;left:0;
+  width:0;height:1px;background:var(--accent);transition:width .25s;
+}
+.nav-links a:hover{color:var(--accent);}
+.nav-links a:hover::after{width:100%;}
+
+/* =====================================================
+   HERO
+   ===================================================== */
+#hero{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;
+  padding:8rem 4rem 5rem;overflow:hidden;
+  background:var(--bg);
+}
+/* Banner image */
+#hero-banner{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  opacity:0;transition:opacity .5s;pointer-events:none;
+}
+#hero-banner.active{opacity:1;}
+#hero-banner.active::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(11,15,26,.95) 45%,rgba(11,15,26,.4));
+}
+/* Orbs */
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;}
+.orb-1{width:480px;height:480px;background:rgba(0,229,176,.07);top:-80px;right:-80px;animation:orb-float 9s ease-in-out infinite;}
+.orb-2{width:320px;height:320px;background:rgba(244,63,94,.05);bottom:80px;left:-60px;animation:orb-float 11s ease-in-out infinite reverse;}
+.orb-3{width:220px;height:220px;background:rgba(129,140,248,.08);top:45%;left:45%;animation:orb-float 13s ease-in-out infinite;}
+@keyframes orb-float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,-18px) scale(1.12)}}
+
+.hero-inner{position:relative;z-index:2;max-width:800px;}
+.hero-eyebrow{
+  font-family:var(--mono);font-size:.7rem;color:var(--accent);
+  letter-spacing:.22em;text-transform:uppercase;margin-bottom:1.4rem;
+  display:flex;align-items:center;gap:.7rem;
+  animation:fade-up .7s .1s both;
+}
+.hero-eyebrow::before{content:'';width:36px;height:1px;background:var(--accent);}
+.hero-name{
+  font-family:var(--display);font-size:clamp(3rem,8vw,6.5rem);
+  font-weight:900;line-height:.92;letter-spacing:-.025em;
+  margin-bottom:.8rem;animation:fade-up .7s .25s both;
+}
+.hero-name .outline{
+  color:transparent;-webkit-text-stroke:1.5px var(--accent);
+}
+.hero-roles{
+  font-family:var(--mono);font-size:.82rem;color:var(--text);
+  letter-spacing:.06em;margin-bottom:1.8rem;
+  animation:fade-up .7s .4s both;display:flex;align-items:center;
+  flex-wrap:wrap;gap:.4rem;
+}
+.hero-roles .sep{color:var(--accent2);margin:0 .2rem;}
+.hero-bio{
+  font-size:1.08rem;color:var(--muted);max-width:500px;
+  line-height:1.75;margin-bottom:2.5rem;
+  animation:fade-up .7s .55s both;
+}
+.hero-ctas{display:flex;gap:.8rem;flex-wrap:wrap;animation:fade-up .7s .7s both;}
+.cta-primary{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.9rem 1.8rem;background:var(--accent);color:#0b0f1a;font-weight:700;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:all .25s;display:inline-block;
+}
+.cta-primary:hover{background:#fff;transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--accent);}
+.cta-secondary{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.9rem 1.8rem;border:1px solid rgba(255,255,255,.2);color:var(--text);
+  transition:all .25s;display:inline-block;
+}
+.cta-secondary:hover{border-color:var(--accent);color:var(--accent);}
+
+.hero-stats{
+  position:absolute;z-index:2;right:4rem;bottom:4rem;
+  display:flex;flex-direction:column;gap:1.4rem;
+  animation:fade-left .7s 1s both;
+}
+.h-stat{text-align:right;padding-right:1rem;border-right:2px solid var(--accent);}
+.h-stat-n{font-family:var(--display);font-size:2rem;font-weight:900;color:var(--accent);line-height:1;}
+.h-stat-l{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+
+/* Banner edit controls */
+#banner-ctrls{
+  display:none;position:absolute;top:6rem;right:2rem;z-index:10;
+  flex-direction:column;gap:.4rem;align-items:flex-end;
+}
+body.editing #banner-ctrls{display:flex;}
+.img-ctrl-btn{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.4rem .85rem;cursor:pointer;border:none;transition:all .2s;
+}
+#banner-set{background:rgba(0,229,176,.15);border:1px solid var(--accent);color:var(--accent);}
+#banner-set:hover{background:rgba(0,229,176,.3);}
+#banner-del{background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.4);color:var(--accent2);display:none;}
+#banner-del:hover{background:rgba(244,63,94,.3);}
+#banner-del.show{display:block;}
+#banner-input{display:none;}
+
+/* =====================================================
+   SECTION SCAFFOLD
+   ===================================================== */
+section{position:relative;z-index:2;padding:7rem 4rem;}
+.sec-header{
+  display:flex;align-items:baseline;gap:1.2rem;margin-bottom:3.5rem;
+}
+.sec-n{font-family:var(--mono);font-size:.68rem;color:var(--accent);letter-spacing:.12em;}
+.sec-title{
+  font-family:var(--display);font-size:clamp(1.9rem,4vw,3rem);
+  font-weight:900;letter-spacing:-.02em;line-height:1;
+}
+.sec-line{flex:1;height:1px;background:rgba(255,255,255,.08);}
+
+/* =====================================================
+   ABOUT  (#0f1420)
+   ===================================================== */
+#about{background:var(--s1);border-top:1px solid rgba(255,255,255,.06);}
+#about .sec-line{background:rgba(0,229,176,.15);}
+.about-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:4rem;align-items:start;}
+
+/* Profile picture */
+.profile-wrap{position:relative;margin-bottom:1.5rem;width:fit-content;}
+.profile-img{
+  width:164px;height:164px;object-fit:cover;object-position:center;
+  border:2px solid var(--accent);display:none;
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+}
+.profile-img.show{display:block;}
+.profile-ph{
+  width:164px;height:164px;background:rgba(255,255,255,.05);
+  border:2px dashed rgba(0,229,176,.2);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:.4rem;
+}
+body:not(.editing) .profile-ph{display:none;}
+.profile-ph span{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+.pic-ctrls{display:none;flex-direction:column;gap:.3rem;margin-top:.5rem;}
+body.editing .pic-ctrls{display:flex;}
+.pic-ctrl-btn{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;
+  padding:.3rem .7rem;cursor:pointer;border:none;transition:all .2s;text-align:center;
+}
+#pic-set{background:rgba(0,229,176,.15);border:1px solid var(--accent);color:var(--accent);}
+#pic-set:hover{background:rgba(0,229,176,.3);}
+#pic-del{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.35);color:var(--accent2);display:none;}
+#pic-del:hover{background:rgba(244,63,94,.25);}
+#pic-del.show{display:block;}
+#pic-input{display:none;}
+
+.about-quote{
+  font-family:var(--display);font-size:1.3rem;font-weight:700;
+  color:var(--text);line-height:1.45;margin-bottom:1.5rem;
+  border-left:3px solid var(--accent);padding-left:1.2rem;
+}
+.about-p{font-size:1rem;color:var(--muted);line-height:1.8;margin-bottom:1.1rem;}
+
+.about-cards{display:flex;flex-direction:column;gap:1rem;}
+.about-card{
+  padding:1.2rem 1.4rem;background:var(--card);
+  border:1px solid var(--card-border);position:relative;
+  border-left:3px solid var(--accent);transition:border-color .2s;
+}
+.about-card:nth-child(2){border-left-color:var(--accent2);}
+.about-card:nth-child(3){border-left-color:var(--accent3);}
+.about-card:nth-child(4){border-left-color:var(--accent);}
+.about-card:hover{border-color:rgba(0,229,176,.3);}
+.card-label{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:.3rem;
+}
+.about-card:nth-child(2) .card-label{color:var(--accent2);}
+.about-card:nth-child(3) .card-label{color:var(--accent3);}
+.card-val{font-size:.95rem;color:var(--text);}
+
+/* =====================================================
+   SKILLS  (#12100f)
+   ===================================================== */
+#skills{background:var(--s2);border-top:1px solid rgba(255,255,255,.06);}
+#skills .sec-line{background:rgba(0,229,176,.12);}
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.skill-cat{
+  background:var(--card);border:1px solid var(--card-border);
+  padding:1.6rem;position:relative;transition:transform .25s,border-color .25s;
+}
+.skill-cat:hover{transform:translateY(-3px);border-color:rgba(0,229,176,.3);}
+.skill-cat-title{
+  font-family:var(--display);font-size:1rem;font-weight:800;
+  color:var(--accent);margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.skill-cat-title::before{
+  content:'';width:7px;height:7px;background:var(--accent);
+  transform:rotate(45deg);flex-shrink:0;
+}
+.skill-cat-title.red{color:var(--accent2);}.skill-cat-title.red::before{background:var(--accent2);}
+.skill-cat-title.purple{color:var(--accent3);}.skill-cat-title.purple::before{background:var(--accent3);}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;}
+.tag{
+  font-family:var(--mono);font-size:.65rem;padding:.28rem .65rem;
+  border:1px solid rgba(255,255,255,.14);color:var(--text);
+  letter-spacing:.04em;display:inline-flex;align-items:center;gap:.25rem;
+  transition:all .2s;opacity:.88;
+}
+.tag:hover{border-color:var(--accent);color:var(--accent);opacity:1;}
+
+/* =====================================================
+   PROJECTS  (#0e0b1a)
+   ===================================================== */
+#projects{background:var(--s3);border-top:1px solid rgba(255,255,255,.06);}
+#projects .sec-line{background:rgba(129,140,248,.2);}
+.projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.proj-card{
+  background:var(--card);border:1px solid var(--card-border);
+  padding:2rem;position:relative;transition:all .25s;
+}
+.proj-card.featured{grid-column:span 2;}
+.proj-card:hover{border-color:rgba(0,229,176,.3);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.3);}
+.proj-num{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-bottom:.7rem;}
+.proj-title{
+  font-family:var(--display);font-size:1.35rem;font-weight:800;
+  color:var(--text);margin-bottom:.6rem;line-height:1.25;
+}
+.proj-card.featured .proj-title{font-size:1.7rem;}
+.proj-desc{font-size:.92rem;color:var(--muted);line-height:1.72;margin-bottom:1.2rem;}
+.proj-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.1rem;align-items:center;}
+.ptag{
+  font-family:var(--mono);font-size:.6rem;padding:.22rem .55rem;
+  background:rgba(0,229,176,.09);color:var(--accent);
+  border:1px solid rgba(0,229,176,.2);letter-spacing:.04em;
+  display:inline-flex;align-items:center;gap:.25rem;
+}
+.ptag.red{background:rgba(244,63,94,.09);color:var(--accent2);border-color:rgba(244,63,94,.2);}
+.ptag.purple{background:rgba(129,140,248,.09);color:var(--accent3);border-color:rgba(129,140,248,.2);}
+.proj-link{
+  font-family:var(--mono);font-size:.65rem;color:var(--accent);
+  letter-spacing:.1em;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:.4rem;transition:gap .2s;
+}
+.proj-link:hover{gap:.9rem;}
+
+/* =====================================================
+   EDUCATION  (#0a1218)
+   ===================================================== */
+#education{background:var(--s4);border-top:1px solid rgba(255,255,255,.06);}
+#education .sec-line{background:rgba(0,229,176,.12);}
+.edu-line{position:relative;padding-left:2rem;}
+.edu-line::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,var(--accent),var(--accent3),transparent);
+}
+.edu-item{
+  position:relative;padding:1.4rem 1.4rem 2rem 2rem;
+  background:var(--card);border:1px solid var(--card-border);
+  margin-bottom:1rem;
+}
+.edu-item::before{
+  content:'';position:absolute;left:-2.3rem;top:1.6rem;
+  width:10px;height:10px;background:var(--accent);
+  transform:rotate(45deg);
+}
+.edu-item:nth-child(even)::before{background:var(--accent3);}
+.edu-date{font-family:var(--mono);font-size:.65rem;color:var(--accent);letter-spacing:.1em;margin-bottom:.3rem;}
+.edu-item:nth-child(even) .edu-date{color:var(--accent3);}
+.edu-degree{font-family:var(--display);font-size:1.15rem;font-weight:800;color:var(--text);margin-bottom:.15rem;}
+.edu-school{font-size:.9rem;color:var(--muted);margin-bottom:.4rem;}
+.edu-note{font-size:.85rem;color:var(--muted);opacity:.8;margin-bottom:.6rem;}
+.course-tags{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;margin-top:.5rem;}
+.ctag{
+  font-family:var(--mono);font-size:.6rem;padding:.2rem .55rem;
+  border:1px solid rgba(255,255,255,.12);color:var(--muted);
+  letter-spacing:.04em;display:inline-flex;align-items:center;gap:.25rem;transition:all .15s;
+}
+.ctag:hover{border-color:var(--accent);color:var(--accent);}
+
+/* =====================================================
+   RESUME  (#111116)
+   ===================================================== */
+#resume{background:var(--s5);border-top:1px solid rgba(255,255,255,.06);}
+#resume .sec-line{background:rgba(129,140,248,.2);}
+.resume-cols{display:grid;grid-template-columns:1fr 1fr;gap:3rem;}
+.resume-col h3{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.5rem;padding-bottom:.6rem;
+  border-bottom:1px solid rgba(0,229,176,.15);
+}
+.r-entry{
+  background:var(--card);border:1px solid var(--card-border);
+  padding:1.2rem 1.3rem;margin-bottom:.8rem;position:relative;transition:border-color .2s;
+}
+.r-entry:hover{border-color:rgba(0,229,176,.2);}
+.r-title{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.15rem;}
+.r-org{font-size:.87rem;color:var(--accent);margin-bottom:.1rem;}
+.r-date{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.08em;margin-bottom:.55rem;}
+.r-desc{font-size:.87rem;color:var(--muted);line-height:1.68;}
+
+/* Resume file area */
+.resume-file-area{
+  margin-top:2.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem;
+}
+#resume-dl{display:none;}
+.resume-dl-btn{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.85rem 1.8rem;background:var(--accent);color:#0b0f1a;font-weight:700;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:all .25s;cursor:pointer;border:none;
+}
+.resume-dl-btn:hover{background:#fff;}
+#no-resume{font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.08em;}
+.resume-upload-zone{
+  display:none;flex-direction:column;align-items:center;gap:.8rem;
+  padding:1.5rem 2rem;border:1px dashed rgba(0,229,176,.2);
+  background:rgba(0,229,176,.02);margin-top:1rem;width:100%;max-width:400px;
+}
+body.editing .resume-upload-zone{display:flex;}
+.ru-label{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.55rem 1.2rem;border:1px solid var(--accent);color:var(--accent);
+  cursor:pointer;transition:all .2s;
+}
+.ru-label:hover{background:rgba(0,229,176,.1);}
+#resume-fname{font-family:var(--mono);font-size:.6rem;color:var(--muted);}
+#resume-del-btn{
+  display:none;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.35rem .75rem;border:1px solid rgba(244,63,94,.35);color:var(--accent2);
+  background:transparent;cursor:pointer;transition:all .2s;
+}
+#resume-del-btn:hover{background:var(--accent2);color:#fff;}
+#resume-del-btn.show{display:block;}
+#resume-file-input{display:none;}
+
+/* =====================================================
+   CONTACT  (#0c1410)
+   ===================================================== */
+#contact{background:var(--s6);border-top:1px solid rgba(255,255,255,.06);overflow:hidden;}
+#contact .sec-line{background:rgba(0,229,176,.12);}
+#contact::after{
+  content:'CONNECT';position:absolute;
+  font-family:var(--display);font-size:clamp(5rem,13vw,12rem);font-weight:900;
+  color:rgba(0,229,176,.025);bottom:1rem;left:50%;transform:translateX(-50%);
+  white-space:nowrap;letter-spacing:-.03em;pointer-events:none;
+}
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.contact-tagline{
+  font-family:var(--display);font-size:clamp(1.6rem,3.5vw,2.4rem);
+  font-weight:900;line-height:1.25;margin-bottom:1.2rem;letter-spacing:-.02em;
+}
+.contact-tagline em{font-style:normal;color:var(--accent);}
+.contact-intro{font-size:.97rem;color:var(--muted);line-height:1.75;margin-bottom:2rem;}
+.contact-links{display:flex;flex-direction:column;gap:.7rem;}
+.c-link{
+  display:flex;align-items:center;gap:.9rem;padding:.9rem 1.2rem;
+  background:var(--card);border:1px solid var(--card-border);
+  color:var(--text);transition:all .25s;
+}
+.c-link:hover{border-color:var(--accent);color:var(--accent);transform:translateX(6px);}
+.c-link-icon{
+  width:34px;height:34px;background:rgba(0,229,176,.08);
+  border:1px solid rgba(0,229,176,.15);display:flex;
+  align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;
+}
+.c-link-info{flex:1;}
+.c-link-label{font-family:var(--mono);font-size:.58rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;display:block;}
+.c-link-val{font-size:.9rem;}
+.contact-form{display:flex;flex-direction:column;gap:.8rem;}
+.f-row{display:flex;flex-direction:column;gap:.3rem;}
+.f-label{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.f-input,.f-textarea{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:.92rem;
+  padding:.75rem 1rem;outline:none;transition:border-color .2s;width:100%;
+}
+.f-input:focus,.f-textarea:focus{border-color:var(--accent);}
+.f-textarea{resize:vertical;min-height:120px;}
+.f-submit{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.85rem 1.8rem;background:var(--accent);color:#0b0f1a;font-weight:700;
+  border:none;cursor:pointer;align-self:flex-start;transition:all .25s;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+}
+.f-submit:hover{background:#fff;transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--accent);}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+footer{
+  padding:1.8rem 4rem;background:#080c15;
+  border-top:1px solid rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:space-between;position:relative;
+}
+.foot-copy{font-family:var(--mono);font-size:.65rem;color:var(--muted);letter-spacing:.06em;}
+.foot-copy .fa{color:var(--accent);}
+.foot-note{font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.2);letter-spacing:.06em;}
+
+/* Invisible unlock dot — bottom-right corner */
+#unlock-dot{
+  position:fixed;bottom:.9rem;right:.9rem;width:20px;height:20px;
+  border-radius:50%;background:transparent;border:1px solid transparent;
+  cursor:pointer;z-index:7000;transition:all .3s;
+}
+#unlock-dot:hover{
+  background:rgba(0,229,176,.15);
+  border-color:rgba(0,229,176,.4);
+}
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+@keyframes fade-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade-left{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}40%{transform:translateX(8px)}
+  60%{transform:translateX(-5px)}80%{transform:translateX(5px)}
+}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+@media(max-width:900px){
+  #nav{padding:1rem 1.5rem;}.nav-links{gap:1.2rem;}
+  section{padding:5rem 1.5rem;}
+  #hero{padding:7rem 1.5rem 4rem;}
+  .hero-stats,.orb-1,.orb-2,.orb-3{display:none;}
+  .about-wrap,.resume-cols,.contact-wrap{grid-template-columns:1fr;gap:2rem;}
+  .skills-grid{grid-template-columns:1fr 1fr;}
+  .projects-grid{grid-template-columns:1fr;}
+  .proj-card.featured{grid-column:span 1;}
+  footer{flex-direction:column;gap:.5rem;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- =====================================================
+     HIDDEN FILE INPUTS
+     ===================================================== -->
+<input type="file" id="banner-input" accept="image/*" style="display:none">
+<input type="file" id="pic-input" accept="image/*" style="display:none">
+<input type="file" id="resume-file-input" accept=".pdf" style="display:none">
+
+<!-- =====================================================
+     PASSWORD MODAL
+     ===================================================== -->
+<div id="pw-overlay">
+  <div id="pw-box">
+    <h3>Editor Access</h3>
+    <input id="pw-field" type="password" placeholder="Enter password…" autocomplete="off"/>
+    <div id="pw-err"></div>
+    <div class="pw-btns">
+      <button class="pw-btn" id="pw-cancel">Cancel</button>
+      <button class="pw-btn" id="pw-ok">Unlock →</button>
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================
+     EDIT TOOLBAR
+     ===================================================== -->
+<div id="ed-bar">
+  <div class="eb-label"><div class="eb-pulse"></div>Edit Mode</div>
+  <button class="eb-btn" id="eb-export">⬇ Save &amp; Export</button>
+  <button class="eb-btn" id="eb-lock">🔒 Lock</button>
+</div>
+
+<!-- =====================================================
+     NAV
+     ===================================================== -->
+<nav id="nav">
+  <div class="nav-brand"><span>// </span>BENYACKO<span>.dev</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#resume">Resume</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- =====================================================
+     HERO
+     ===================================================== -->
+<section id="hero">
+  <div id="hero-banner"></div>
+
+  <div id="banner-ctrls">
+    <button class="img-ctrl-btn" id="banner-set">🖼 Set Banner</button>
+    <button class="img-ctrl-btn" id="banner-del">✕ Remove</button>
+  </div>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow" contenteditable="false">Computer Science &amp; Mathematics @ UWF · Expected May 2027</div>
+    <h1 class="hero-name">
+      ANDREW<br>
+      <span class="outline" contenteditable="false">BENYACKO</span>
+    </h1>
+    <div class="hero-roles">
+      <span contenteditable="false">Data Analytics</span>
+      <span class="sep">◆</span>
+      <span contenteditable="false">Cybersecurity</span>
+      <span class="sep">◆</span>
+      <span contenteditable="false">Academic Research</span>
+    </div>
+    <p class="hero-bio" contenteditable="false">Computer Science and Mathematics double major with a strong background in cybersecurity analytics, data analysis, and applied statistical modeling. I uncover anomalies in complex datasets and translate findings into actionable research.</p>
+    <div class="hero-ctas">
+      <a href="#projects" class="cta-primary">View My Work →</a>
+      <a href="#contact" class="cta-secondary">Get In Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="h-stat">
+      <div class="h-stat-n" contenteditable="false">3.64</div>
+      <div class="h-stat-l" contenteditable="false">GPA</div>
+    </div>
+    <div class="h-stat">
+      <div class="h-stat-n" contenteditable="false">1</div>
+      <div class="h-stat-l" contenteditable="false">Publication</div>
+    </div>
+    <div class="h-stat">
+      <div class="h-stat-n" contenteditable="false">4</div>
+      <div class="h-stat-l" contenteditable="false">Certifications</div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     ABOUT
+     ===================================================== -->
+<section id="about">
+  <div class="sec-header reveal">
+    <span class="sec-n">01</span>
+    <h2 class="sec-title">About Me</h2>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="about-wrap">
+    <div class="reveal">
+      <!-- Profile picture -->
+      <div class="profile-wrap">
+        <img id="profile-img" class="profile-img" src="" alt="Andrew Benyacko"/>
+        <div id="profile-ph" class="profile-ph">
+          <span style="font-size:2rem;opacity:.25">👤</span>
+          <span>Profile Photo</span>
+        </div>
+        <div class="pic-ctrls">
+          <button class="pic-ctrl-btn" id="pic-set">📷 Upload Photo</button>
+          <button class="pic-ctrl-btn" id="pic-del">✕ Remove Photo</button>
+        </div>
+      </div>
+
+      <p class="about-quote" contenteditable="false">"Bridging the gap between raw data and real-world security — one dataset at a time."</p>
+      <p class="about-p" contenteditable="false">I'm a <strong>Computer Science and Mathematics double major</strong> at the University of West Florida with a strong foundation in cybersecurity analytics, data analysis, and applied statistical modeling.</p>
+      <p class="about-p" contenteditable="false">My work spans <strong>network traffic analysis, regression modeling, and data validation</strong>, with published research in incremental frequent pattern mining applied to network attack traffic.</p>
+      <p class="about-p" contenteditable="false">As an officer of UWF's AIDA Lab and a Kugelman Honors Program scholar, I thrive in research-driven environments where rigorous methodology meets real-world security impact.</p>
+    </div>
+
+    <div class="about-cards reveal">
+      <div class="about-card">
+        <button class="del-btn" data-target="about-card">✕</button>
+        <div class="card-label">⬡ Specialization</div>
+        <div class="card-val" contenteditable="false">Cybersecurity Analytics &amp; Data Analysis</div>
+      </div>
+      <div class="about-card">
+        <button class="del-btn" data-target="about-card">✕</button>
+        <div class="card-label">⬡ Research Focus</div>
+        <div class="card-val" contenteditable="false">Network Traffic Analysis &amp; Statistical Modeling</div>
+      </div>
+      <div class="about-card">
+        <button class="del-btn" data-target="about-card">✕</button>
+        <div class="card-label">⬡ Location</div>
+        <div class="card-val" contenteditable="false">Saint Augustine, FL</div>
+      </div>
+      <div class="about-card">
+        <button class="del-btn" data-target="about-card">✕</button>
+        <div class="card-label">⬡ Status</div>
+        <div class="card-val" contenteditable="false">Open to Research &amp; Internship Opportunities</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     SKILLS
+     ===================================================== -->
+<section id="skills">
+  <div class="sec-header reveal">
+    <span class="sec-n">02</span>
+    <h2 class="sec-title">Skills</h2>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="skills-grid" id="skills-grid">
+
+    <div class="skill-cat reveal">
+      <button class="del-btn">✕</button>
+      <div class="skill-cat-title" contenteditable="false">Programming Languages</div>
+      <div class="tags">
+        <span class="tag" contenteditable="false">Python<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">R<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">C++<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Java<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">MATLAB<button class="del-tag">✕</button></span>
+      </div>
+      <button class="add-btn" data-action="add-tag">+ Add Skill</button>
+    </div>
+
+    <div class="skill-cat reveal">
+      <button class="del-btn">✕</button>
+      <div class="skill-cat-title red" contenteditable="false">Cybersecurity &amp; Networking</div>
+      <div class="tags">
+        <span class="tag" contenteditable="false">Network Traffic Analysis<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">OS Fundamentals<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Security Fundamentals<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Networking Fundamentals<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Anomaly Detection<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Risk Assessment<button class="del-tag">✕</button></span>
+      </div>
+      <button class="add-btn" data-action="add-tag">+ Add Skill</button>
+    </div>
+
+    <div class="skill-cat reveal">
+      <button class="del-btn">✕</button>
+      <div class="skill-cat-title purple" contenteditable="false">Data Science &amp; Research</div>
+      <div class="tags">
+        <span class="tag" contenteditable="false">Exploratory Data Analysis<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Regression Modeling<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Data Validation<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Supervised ML<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Incremental Pattern Mining<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Statistical Modeling<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Academic Writing<button class="del-tag">✕</button></span>
+      </div>
+      <button class="add-btn" data-action="add-tag">+ Add Skill</button>
+    </div>
+
+    <div class="skill-cat reveal">
+      <button class="del-btn">✕</button>
+      <div class="skill-cat-title" contenteditable="false">Tools &amp; Environments</div>
+      <div class="tags">
+        <span class="tag" contenteditable="false">Git<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">RStudio<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">RMarkdown<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">LaTeX<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">PySpark<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Jupyter Notebook<button class="del-tag">✕</button></span>
+      </div>
+      <button class="add-btn" data-action="add-tag">+ Add Skill</button>
+    </div>
+
+    <div class="skill-cat reveal">
+      <button class="del-btn">✕</button>
+      <div class="skill-cat-title red" contenteditable="false">Certifications</div>
+      <div class="tags">
+        <span class="tag" contenteditable="false">CompTIA ITF+<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">MTA: Security Fundamentals<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">MTA: Networking Fundamentals<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Stanford: Supervised ML<button class="del-tag">✕</button></span>
+      </div>
+      <button class="add-btn" data-action="add-tag">+ Add Skill</button>
+    </div>
+
+    <div class="skill-cat reveal">
+      <button class="del-btn">✕</button>
+      <div class="skill-cat-title purple" contenteditable="false">Leadership &amp; Involvement</div>
+      <div class="tags">
+        <span class="tag" contenteditable="false">AIDA Lab Officer<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Kugelman Honors Scholar<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Dean's Honor Roll<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Technical Documentation<button class="del-tag">✕</button></span>
+        <span class="tag" contenteditable="false">Research Communication<button class="del-tag">✕</button></span>
+      </div>
+      <button class="add-btn" data-action="add-tag">+ Add Skill</button>
+    </div>
+
+  </div>
+  <button class="add-btn" id="add-skill-cat" style="max-width:320px;margin-top:1rem;">+ Add Skill Category</button>
+</section>
+
+<!-- =====================================================
+     PROJECTS
+     ===================================================== -->
+<section id="projects">
+  <div class="sec-header reveal">
+    <span class="sec-n">03</span>
+    <h2 class="sec-title">Projects</h2>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="projects-grid" id="projects-grid">
+
+    <div class="proj-card featured reveal">
+      <button class="del-btn">✕</button>
+      <div class="proj-num" contenteditable="false">01 — FEATURED</div>
+      <h3 class="proj-title" contenteditable="false">Incremental Frequent Pattern Mining on Network Attack Traffic</h3>
+      <p class="proj-desc" contenteditable="false">Published research applying incremental frequent pattern mining to select feature subsets in continuous-flow network attack traffic big data. Developed workflows to analyze evolving datasets and document evaluation metrics supporting real-world security operations.</p>
+      <div class="proj-tags">
+        <span class="ptag" contenteditable="false">Python<button class="del-tag">✕</button></span>
+        <span class="ptag" contenteditable="false">PySpark<button class="del-tag">✕</button></span>
+        <span class="ptag red" contenteditable="false">Pattern Mining<button class="del-tag">✕</button></span>
+        <span class="ptag purple" contenteditable="false">Big Data<button class="del-tag">✕</button></span>
+        <span class="ptag" contenteditable="false">LaTeX<button class="del-tag">✕</button></span>
+        <button class="add-btn" data-action="add-ptag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Tag</button>
+      </div>
+      <a href="#" class="proj-link" contenteditable="false">Read Publication →</a>
+    </div>
+
+    <div class="proj-card reveal">
+      <button class="del-btn">✕</button>
+      <div class="proj-num" contenteditable="false">02</div>
+      <h3 class="proj-title" contenteditable="false">Network Security Dataset Analysis</h3>
+      <p class="proj-desc" contenteditable="false">Analyzed network traffic and security-related datasets to identify anomalous and high-risk behaviors. Applied incremental data analysis techniques across evolving datasets, validating results for accuracy, consistency, and reproducibility.</p>
+      <div class="proj-tags">
+        <span class="ptag" contenteditable="false">Python<button class="del-tag">✕</button></span>
+        <span class="ptag red" contenteditable="false">Network Analysis<button class="del-tag">✕</button></span>
+        <span class="ptag" contenteditable="false">Data Validation<button class="del-tag">✕</button></span>
+        <span class="ptag purple" contenteditable="false">UWF AIDA Lab<button class="del-tag">✕</button></span>
+        <button class="add-btn" data-action="add-ptag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Tag</button>
+      </div>
+      <a href="#" class="proj-link" contenteditable="false">View Project →</a>
+    </div>
+
+    <div class="proj-card reveal">
+      <button class="del-btn">✕</button>
+      <div class="proj-num" contenteditable="false">03</div>
+      <h3 class="proj-title" contenteditable="false">Regression &amp; EDA — Statistics for Data Science</h3>
+      <p class="proj-desc" contenteditable="false">Conducted exploratory data analysis and regression modeling on real-world datasets. Cleaned and validated structured data, then generated dashboards, visualizations, and written reports using R and RMarkdown.</p>
+      <div class="proj-tags">
+        <span class="ptag" contenteditable="false">R<button class="del-tag">✕</button></span>
+        <span class="ptag red" contenteditable="false">RMarkdown<button class="del-tag">✕</button></span>
+        <span class="ptag purple" contenteditable="false">Regression Modeling<button class="del-tag">✕</button></span>
+        <span class="ptag" contenteditable="false">Data Visualization<button class="del-tag">✕</button></span>
+        <button class="add-btn" data-action="add-ptag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Tag</button>
+      </div>
+      <a href="#" class="proj-link" contenteditable="false">View Report →</a>
+    </div>
+
+    <div class="proj-card reveal">
+      <button class="del-btn">✕</button>
+      <div class="proj-num" contenteditable="false">04</div>
+      <h3 class="proj-title" contenteditable="false">CS / Math Coursework Projects</h3>
+      <p class="proj-desc" contenteditable="false">Applied Python, Java, C++, and MATLAB across core Computer Science and Mathematics coursework at UWF — spanning data structures, algorithms, and applied mathematics to build a rigorous foundation for cybersecurity and data science work.</p>
+      <div class="proj-tags">
+        <span class="ptag" contenteditable="false">Python<button class="del-tag">✕</button></span>
+        <span class="ptag purple" contenteditable="false">Java<button class="del-tag">✕</button></span>
+        <span class="ptag" contenteditable="false">C++<button class="del-tag">✕</button></span>
+        <span class="ptag red" contenteditable="false">MATLAB<button class="del-tag">✕</button></span>
+        <button class="add-btn" data-action="add-ptag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Tag</button>
+      </div>
+      <a href="#" class="proj-link" contenteditable="false">View Project →</a>
+    </div>
+
+  </div>
+  <button class="add-btn" id="add-project" style="max-width:320px;margin-top:1rem;">+ Add Project</button>
+</section>
+
+<!-- =====================================================
+     EDUCATION
+     ===================================================== -->
+<section id="education">
+  <div class="sec-header reveal">
+    <span class="sec-n">04</span>
+    <h2 class="sec-title">Education</h2>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="edu-line" id="edu-list">
+
+    <div class="edu-item reveal">
+      <button class="del-btn">✕</button>
+      <div class="edu-date" contenteditable="false">2023 — Expected May 2027</div>
+      <div class="edu-degree" contenteditable="false">B.S. Computer Science &amp; B.S. Mathematics (Double Major)</div>
+      <div class="edu-school" contenteditable="false">University of West Florida · Pensacola, FL · GPA: 3.64 / 4.00</div>
+      <div class="edu-note" contenteditable="false">Minor: Honors 4-Year Pathway · Kugelman Honors Program Scholar</div>
+      <div class="course-tags">
+        <span class="ctag" contenteditable="false">Data Structures &amp; Algorithms<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Statistics for Data Science<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Cybersecurity Analytics<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Linear Algebra<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Calculus I–III<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Operating Systems<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Computer Networks<button class="del-tag">✕</button></span>
+        <button class="add-btn" data-action="add-ctag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Course</button>
+      </div>
+    </div>
+
+    <div class="edu-item reveal">
+      <button class="del-btn">✕</button>
+      <div class="edu-date" contenteditable="false">2023 — Present</div>
+      <div class="edu-degree" contenteditable="false">Honors &amp; Scholarships</div>
+      <div class="edu-school" contenteditable="false">University of West Florida</div>
+      <div class="edu-note" contenteditable="false"></div>
+      <div class="course-tags">
+        <span class="ctag" contenteditable="false">Dean's Honor Roll<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">HCMSE Endowment Scholarship<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">UWF Merit Scholarship<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Willis &amp; Victoria Mullet Endowment<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Kugelman Honors Program<button class="del-tag">✕</button></span>
+        <button class="add-btn" data-action="add-ctag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Course</button>
+      </div>
+    </div>
+
+    <div class="edu-item reveal">
+      <button class="del-btn">✕</button>
+      <div class="edu-date" contenteditable="false">2023 — Present</div>
+      <div class="edu-degree" contenteditable="false">Professional Certifications</div>
+      <div class="edu-school" contenteditable="false">CompTIA · Microsoft · Stanford University</div>
+      <div class="edu-note" contenteditable="false"></div>
+      <div class="course-tags">
+        <span class="ctag" contenteditable="false">CompTIA ITF+<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">MTA: Security Fundamentals<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">MTA: Networking Fundamentals<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Stanford: Supervised ML<button class="del-tag">✕</button></span>
+        <button class="add-btn" data-action="add-ctag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Course</button>
+      </div>
+    </div>
+
+    <div class="edu-item reveal">
+      <button class="del-btn">✕</button>
+      <div class="edu-date" contenteditable="false">2023 — Present</div>
+      <div class="edu-degree" contenteditable="false">Leadership &amp; Involvement</div>
+      <div class="edu-school" contenteditable="false">University of West Florida</div>
+      <div class="edu-note" contenteditable="false"></div>
+      <div class="course-tags">
+        <span class="ctag" contenteditable="false">AIDA Lab — Officer<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Kugelman Honors Program — Scholar<button class="del-tag">✕</button></span>
+        <span class="ctag" contenteditable="false">Applied Intelligence &amp; Data Analytics Lab<button class="del-tag">✕</button></span>
+        <button class="add-btn" data-action="add-ctag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Course</button>
+      </div>
+    </div>
+
+  </div>
+  <button class="add-btn" id="add-edu" style="max-width:320px;margin-top:1rem;">+ Add Education Entry</button>
+</section>
+
+<!-- =====================================================
+     RESUME
+     ===================================================== -->
+<section id="resume">
+  <div class="sec-header reveal">
+    <span class="sec-n">05</span>
+    <h2 class="sec-title">Resume</h2>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="resume-cols">
+
+    <div class="reveal">
+      <h3>Experience</h3>
+      <div id="exp-list">
+
+        <div class="r-entry">
+          <button class="del-btn">✕</button>
+          <div class="r-title" contenteditable="false">Research Assistant — Data Analytics &amp; Cybersecurity</div>
+          <div class="r-org" contenteditable="false">University of West Florida</div>
+          <div class="r-date" contenteditable="false">JAN 2025 — PRESENT</div>
+          <div class="r-desc" contenteditable="false">Analyze network traffic and security-related datasets to identify anomalous and high-risk behaviors. Validate analytical results for accuracy, consistency, and reproducibility. Apply incremental data analysis techniques across evolving datasets and document workflows supporting cybersecurity research conclusions.</div>
+        </div>
+
+        <div class="r-entry">
+          <button class="del-btn">✕</button>
+          <div class="r-title" contenteditable="false">Statistical Analyst — Statistics for Data Science</div>
+          <div class="r-org" contenteditable="false">University of West Florida</div>
+          <div class="r-date" contenteditable="false">JAN 2025 — AUG 2025</div>
+          <div class="r-desc" contenteditable="false">Conducted exploratory data analysis and regression modeling on real-world datasets. Cleaned, preprocessed, and validated structured data prior to analysis. Generated dashboards, visualizations, and written reports using R and RMarkdown.</div>
+        </div>
+
+        <div class="r-entry">
+          <button class="del-btn">✕</button>
+          <div class="r-title" contenteditable="false">Front Service Clerk</div>
+          <div class="r-org" contenteditable="false">Publix Super Markets</div>
+          <div class="r-date" contenteditable="false">MAY 2021 — PRESENT</div>
+          <div class="r-desc" contenteditable="false">Operate in a fast-paced, regulated environment requiring accuracy and reliability. Collaborate with team members to resolve operational and customer-facing issues. Demonstrate professionalism, accountability, and consistency.</div>
+        </div>
+
+      </div>
+      <button class="add-btn" id="add-exp" style="max-width:100%;">+ Add Experience</button>
+    </div>
+
+    <div class="reveal">
+      <h3>Publications &amp; Awards</h3>
+      <div id="pub-list">
+
+        <div class="r-entry">
+          <button class="del-btn">✕</button>
+          <div class="r-title" contenteditable="false">Publication — Incremental Frequent Pattern Mining</div>
+          <div class="r-org" contenteditable="false">AIDA Lab, University of West Florida</div>
+          <div class="r-date" contenteditable="false">2025</div>
+          <div class="r-desc" contenteditable="false">"Selecting Feature Subsets in Continuous Flow Network Attack Traffic Big Data Using Incremental Frequent Pattern Mining" — Research publication from UWF AIDA Lab.</div>
+        </div>
+
+        <div class="r-entry">
+          <button class="del-btn">✕</button>
+          <div class="r-title" contenteditable="false">Dean's Honor Roll</div>
+          <div class="r-org" contenteditable="false">University of West Florida</div>
+          <div class="r-date" contenteditable="false">2023 — Present</div>
+          <div class="r-desc" contenteditable="false">Recognized for sustained academic excellence, maintaining a 3.64 GPA across a rigorous double major in Computer Science and Mathematics.</div>
+        </div>
+
+        <div class="r-entry">
+          <button class="del-btn">✕</button>
+          <div class="r-title" contenteditable="false">HCMSE Endowment Scholarship</div>
+          <div class="r-org" contenteditable="false">University of West Florida</div>
+          <div class="r-date" contenteditable="false">2023</div>
+          <div class="r-desc" contenteditable="false">Awarded in recognition of academic achievement and commitment to STEM fields.</div>
+        </div>
+
+        <div class="r-entry">
+          <button class="del-btn">✕</button>
+          <div class="r-title" contenteditable="false">Kugelman Honors Program — Scholar</div>
+          <div class="r-org" contenteditable="false">University of West Florida</div>
+          <div class="r-date" contenteditable="false">2023 — Present</div>
+          <div class="r-desc" contenteditable="false">Selected for the prestigious Kugelman Honors Program, pursuing the Honors 4-Year Pathway minor alongside a CS and Mathematics double major.</div>
+        </div>
+
+      </div>
+      <button class="add-btn" id="add-pub" style="max-width:100%;">+ Add Publication / Award</button>
+    </div>
+
+  </div>
+
+  <!-- Resume PDF -->
+  <div class="resume-file-area">
+    <div id="resume-dl" style="display:none;">
+      <button class="resume-dl-btn" id="resume-dl-btn">⬇ Download Resume (PDF)</button>
+    </div>
+    <div id="no-resume">No resume uploaded yet.</div>
+    <div class="resume-upload-zone">
+      <p style="font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;">Upload your resume PDF</p>
+      <label class="ru-label" for="resume-file-input">📄 Choose PDF</label>
+      <input type="file" id="resume-file-input" accept=".pdf">
+      <span id="resume-fname">No file selected</span>
+      <button id="resume-del-btn">✕ Remove Resume</button>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CONTACT
+     ===================================================== -->
+<section id="contact">
+  <div class="sec-header reveal">
+    <span class="sec-n">06</span>
+    <h2 class="sec-title">Contact</h2>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="contact-wrap">
+    <div class="reveal">
+      <div class="contact-tagline" contenteditable="false">Let's build<br>something <em>great</em><br>together.</div>
+      <p class="contact-intro" contenteditable="false">Whether you have a research opportunity, internship opening, or just want to connect — feel free to reach out.</p>
+      <div class="contact-links">
+        <a href="mailto:andrew.benyacko@gmail.com" class="c-link">
+          <div class="c-link-icon">✉</div>
+          <div class="c-link-info">
+            <span class="c-link-label">Email</span>
+            <span class="c-link-val" contenteditable="false">andrew.benyacko@gmail.com</span>
+          </div>
+          <span>→</span>
+        </a>
+        <a href="https://linkedin.com/in/andrew-benyacko-6b120037b" class="c-link">
+          <div class="c-link-icon">in</div>
+          <div class="c-link-info">
+            <span class="c-link-label">LinkedIn</span>
+            <span class="c-link-val" contenteditable="false">linkedin.com/in/andrew-benyacko-6b120037b</span>
+          </div>
+          <span>→</span>
+        </a>
+        <a href="https://github.com/andrewbenyacko" class="c-link">
+          <div class="c-link-icon">⌥</div>
+          <div class="c-link-info">
+            <span class="c-link-label">GitHub</span>
+            <span class="c-link-val" contenteditable="false">github.com/andrewbenyacko</span>
+          </div>
+          <span>→</span>
+        </a>
+        <a href="https://scholar.google.com" class="c-link">
+          <div class="c-link-icon">∂</div>
+          <div class="c-link-info">
+            <span class="c-link-label">Google Scholar</span>
+            <span class="c-link-val" contenteditable="false">View Publications</span>
+          </div>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+    <div class="reveal">
+      <form class="contact-form" id="contact-form">
+        <div class="f-row"><label class="f-label">Name</label><input class="f-input" type="text" placeholder="Your Name" required></div>
+        <div class="f-row"><label class="f-label">Email</label><input class="f-input" type="email" placeholder="your@email.com" required></div>
+        <div class="f-row"><label class="f-label">Subject</label><input class="f-input" type="text" placeholder="Research Collaboration / Internship / Other"></div>
+        <div class="f-row"><label class="f-label">Message</label><textarea class="f-textarea" placeholder="Tell me about your opportunity…" required></textarea></div>
+        <button type="submit" class="f-submit">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+<footer>
+  <p class="foot-copy">© 2025 <span class="fa">Andrew Benyacko</span>. All rights reserved.</p>
+  <p class="foot-note">Built with precision · Secured by design</p>
+</footer>
+
+<!-- Invisible unlock dot — bottom-right corner, hover shows faint teal -->
+<button id="unlock-dot" aria-hidden="true" title=""></button>
+
+<script>
+/* =====================================================
+   PASSWORD & EDIT SYSTEM
+   ===================================================== */
+// Deterministic hash — password never stored in plain text
+function hashPW(s){
+  const salt='uwf::portfolio::'+s+'::aida';
+  let a=2166136261,b=0xcafe5678;
+  for(let i=0;i<salt.length;i++){
+    a^=salt.charCodeAt(i); a=(a*16777619)>>>0;
+    b^=salt.charCodeAt(salt.length-1-i); b=(b*2246822519)>>>0;
+  }
+  return(a>>>0).toString(36)+(b>>>0).toString(36);
+}
+const HASH = hashPW('Widow4379!');
+let unlocked = false;
+
+function openModal(){
+  document.getElementById('pw-field').value='';
+  document.getElementById('pw-err').textContent='';
+  document.getElementById('pw-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('pw-field').focus(),60);
+}
+function closeModal(){
+  document.getElementById('pw-overlay').classList.remove('show');
+}
+function checkPW(){
+  const val = document.getElementById('pw-field').value;
+  if(hashPW(val)===HASH){ closeModal(); enableEditing(); }
+  else{
+    document.getElementById('pw-err').textContent='✗ Incorrect password.';
+    document.getElementById('pw-field').value='';
+    document.getElementById('pw-field').focus();
+    const box=document.getElementById('pw-box');
+    box.style.animation='none'; void box.offsetHeight;
+    box.style.animation='shake .4s ease';
+  }
+}
+function enableEditing(){
+  unlocked=true;
+  document.body.classList.add('editing');
+  document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable','true'));
+  document.getElementById('ed-bar').classList.add('show');
+}
+function disableEditing(){
+  unlocked=false;
+  document.body.classList.remove('editing');
+  document.querySelectorAll('[contenteditable]').forEach(el=>{
+    el.setAttribute('contenteditable','false'); el.blur();
+  });
+  document.getElementById('ed-bar').classList.remove('show');
+}
+function exportHTML(){
+  // Snapshot with editing off
+  document.querySelectorAll('[contenteditable="true"]').forEach(el=>el.setAttribute('contenteditable','false'));
+  const snap='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  if(unlocked) document.querySelectorAll('[contenteditable="false"]').forEach(el=>el.setAttribute('contenteditable','true'));
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([snap],{type:'text/html'}));
+  a.download='andrew-benyacko-portfolio.html';
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+// Wire modal buttons
+document.getElementById('pw-ok').addEventListener('click',checkPW);
+document.getElementById('pw-cancel').addEventListener('click',closeModal);
+document.getElementById('pw-field').addEventListener('keydown',e=>{
+  if(e.key==='Enter')checkPW(); if(e.key==='Escape')closeModal();
+});
+document.getElementById('pw-overlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('pw-overlay'))closeModal();
+});
+
+// Wire toolbar
+document.getElementById('eb-export').addEventListener('click',exportHTML);
+document.getElementById('eb-lock').addEventListener('click',disableEditing);
+
+// Triple-click footer copyright
+let tClicks=0,tTimer=null;
+document.querySelector('.foot-copy').addEventListener('click',()=>{
+  tClicks++; clearTimeout(tTimer);
+  tTimer=setTimeout(()=>tClicks=0,700);
+  if(tClicks>=3){tClicks=0;openModal();}
+});
+// Invisible dot
+document.getElementById('unlock-dot').addEventListener('click',openModal);
+
+/* =====================================================
+   DELETE BUTTONS
+   ===================================================== */
+document.addEventListener('click',e=>{
+  // Delete cards / items
+  if(e.target.classList.contains('del-btn')){
+    const card=e.target.closest('.skill-cat,.proj-card,.edu-item,.r-entry,.about-card');
+    if(card) card.remove();
+  }
+  // Delete inline tags
+  if(e.target.classList.contains('del-tag')){
+    e.target.closest('.tag,.ptag,.ctag')?.remove();
+  }
+  // Add tag to skill category
+  if(e.target.dataset.action==='add-tag'){
+    const name=prompt('Skill name:'); if(!name)return;
+    const t=document.createElement('span');
+    t.className='tag'; t.setAttribute('contenteditable','true');
+    t.innerHTML=name+'<button class="del-tag">✕</button>';
+    e.target.parentElement.querySelector('.tags').appendChild(t);
+  }
+  // Add project tag
+  if(e.target.dataset.action==='add-ptag'){
+    const name=prompt('Technology/tag:'); if(!name)return;
+    const t=document.createElement('span');
+    t.className='ptag'; t.setAttribute('contenteditable','true');
+    t.innerHTML=name+'<button class="del-tag">✕</button>';
+    e.target.parentElement.insertBefore(t,e.target);
+  }
+  // Add course tag
+  if(e.target.dataset.action==='add-ctag'){
+    const name=prompt('Course/award name:'); if(!name)return;
+    const t=document.createElement('span');
+    t.className='ctag'; t.setAttribute('contenteditable','true');
+    t.innerHTML=name+'<button class="del-tag">✕</button>';
+    e.target.parentElement.insertBefore(t,e.target);
+  }
+});
+
+/* =====================================================
+   ADD BUTTONS
+   ===================================================== */
+// Add skill category
+document.getElementById('add-skill-cat').addEventListener('click',()=>{
+  const name=prompt('Category name:'); if(!name)return;
+  const el=document.createElement('div'); el.className='skill-cat';
+  el.innerHTML=`<button class="del-btn">✕</button>
+    <div class="skill-cat-title" contenteditable="true">${name}</div>
+    <div class="tags"></div>
+    <button class="add-btn" data-action="add-tag">+ Add Skill</button>`;
+  document.getElementById('skills-grid').insertBefore(el,document.getElementById('add-skill-cat'));
+});
+
+// Add project
+document.getElementById('add-project').addEventListener('click',()=>{
+  const title=prompt('Project title:'); if(!title)return;
+  const n=document.querySelectorAll('.proj-card').length+1;
+  const el=document.createElement('div'); el.className='proj-card';
+  el.innerHTML=`<button class="del-btn">✕</button>
+    <div class="proj-num" contenteditable="true">0${n}</div>
+    <h3 class="proj-title" contenteditable="true">${title}</h3>
+    <p class="proj-desc" contenteditable="true">Describe your project…</p>
+    <div class="proj-tags">
+      <button class="add-btn" data-action="add-ptag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Tag</button>
+    </div>
+    <a href="#" class="proj-link" contenteditable="true">View Project →</a>`;
+  document.getElementById('projects-grid').insertBefore(el,document.getElementById('add-project'));
+});
+
+// Add education entry
+document.getElementById('add-edu').addEventListener('click',()=>{
+  const deg=prompt('Degree/title:'); if(!deg)return;
+  const el=document.createElement('div'); el.className='edu-item';
+  el.innerHTML=`<button class="del-btn">✕</button>
+    <div class="edu-date" contenteditable="true">Year — Year</div>
+    <div class="edu-degree" contenteditable="true">${deg}</div>
+    <div class="edu-school" contenteditable="true">Institution Name</div>
+    <div class="edu-note" contenteditable="true"></div>
+    <div class="course-tags">
+      <button class="add-btn" data-action="add-ctag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Course</button>
+    </div>`;
+  document.getElementById('edu-list').insertBefore(el,document.getElementById('add-edu'));
+});
+
+// Add experience
+document.getElementById('add-exp').addEventListener('click',()=>{
+  const title=prompt('Job title:'); if(!title)return;
+  const el=document.createElement('div'); el.className='r-entry';
+  el.innerHTML=`<button class="del-btn">✕</button>
+    <div class="r-title" contenteditable="true">${title}</div>
+    <div class="r-org" contenteditable="true">Organization</div>
+    <div class="r-date" contenteditable="true">MMM YYYY — MMM YYYY</div>
+    <div class="r-desc" contenteditable="true">Describe your responsibilities…</div>`;
+  document.getElementById('exp-list').appendChild(el);
+});
+
+// Add publication/award
+document.getElementById('add-pub').addEventListener('click',()=>{
+  const title=prompt('Publication/Award title:'); if(!title)return;
+  const el=document.createElement('div'); el.className='r-entry';
+  el.innerHTML=`<button class="del-btn">✕</button>
+    <div class="r-title" contenteditable="true">${title}</div>
+    <div class="r-org" contenteditable="true">Venue/Organization</div>
+    <div class="r-date" contenteditable="true">YYYY</div>
+    <div class="r-desc" contenteditable="true">Brief description…</div>`;
+  document.getElementById('pub-list').appendChild(el);
+});
+
+/* =====================================================
+   IMAGE UPLOADS
+   ===================================================== */
+// Banner
+document.getElementById('banner-set').addEventListener('click',()=>document.getElementById('banner-input').click());
+document.getElementById('banner-input').addEventListener('change',function(){
+  const f=this.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const b=document.getElementById('hero-banner');
+    b.style.backgroundImage=`url(${e.target.result})`;
+    b.classList.add('active');
+    document.getElementById('banner-del').classList.add('show');
+  };
+  r.readAsDataURL(f); this.value='';
+});
+document.getElementById('banner-del').addEventListener('click',()=>{
+  const b=document.getElementById('hero-banner');
+  b.style.backgroundImage=''; b.classList.remove('active');
+  document.getElementById('banner-del').classList.remove('show');
+});
+
+// Profile pic
+document.getElementById('pic-set').addEventListener('click',()=>document.getElementById('pic-input').click());
+document.getElementById('pic-input').addEventListener('change',function(){
+  const f=this.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=document.getElementById('profile-img');
+    img.src=e.target.result; img.classList.add('show');
+    document.getElementById('profile-ph').style.display='none';
+    document.getElementById('pic-del').classList.add('show');
+  };
+  r.readAsDataURL(f); this.value='';
+});
+document.getElementById('pic-del').addEventListener('click',()=>{
+  const img=document.getElementById('profile-img');
+  img.src=''; img.classList.remove('show');
+  document.getElementById('profile-ph').style.display='';
+  document.getElementById('pic-del').classList.remove('show');
+});
+
+/* =====================================================
+   RESUME PDF
+   ===================================================== */
+let resumeURL=null;
+document.getElementById('resume-file-input').addEventListener('change',function(){
+  const f=this.files[0]; if(!f||f.type!=='application/pdf'){alert('Please select a PDF.');return;}
+  const r=new FileReader();
+  r.onload=e=>{
+    resumeURL=e.target.result;
+    document.getElementById('no-resume').style.display='none';
+    const dl=document.getElementById('resume-dl'); dl.style.display='block';
+    document.getElementById('resume-dl-btn').onclick=()=>{
+      const a=document.createElement('a'); a.href=resumeURL; a.download=f.name; a.click();
+    };
+    document.getElementById('resume-fname').textContent='✓ '+f.name;
+    document.getElementById('resume-del-btn').classList.add('show');
+  };
+  r.readAsDataURL(f); this.value='';
+});
+document.getElementById('resume-del-btn').addEventListener('click',()=>{
+  resumeURL=null;
+  document.getElementById('resume-dl').style.display='none';
+  document.getElementById('no-resume').style.display='';
+  document.getElementById('resume-fname').textContent='No file selected';
+  document.getElementById('resume-del-btn').classList.remove('show');
+});
+
+/* =====================================================
+   CONTACT FORM
+   ===================================================== */
+document.getElementById('contact-form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const btn=e.target.querySelector('.f-submit');
+  btn.textContent='✓ Message Sent!'; btn.style.background='var(--accent3)';
+  setTimeout(()=>{btn.textContent='Send Message →';btn.style.background='';e.target.reset();},3000);
+});
+
+/* =====================================================
+   SCROLL REVEAL
+   ===================================================== */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('in');observer.unobserve(e.target);}
+  });
+},{threshold:0,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+// Fallback — force reveal after 2s
+setTimeout(()=>document.querySelectorAll('.reveal:not(.in)').forEach(el=>el.classList.add('in')),2000);
+
+/* =====================================================
+   NAV ACTIVE HIGHLIGHT
+   ===================================================== */
+const navAs=document.querySelectorAll('.nav-links a');
+const secs=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-120)cur=s.id;});
+  navAs.forEach(a=>{a.style.color=a.getAttribute('href')==='#'+cur?'var(--accent)':'';});
+},{passive:true});
+</script>
+</body>
+</html>
