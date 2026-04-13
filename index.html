@@ -1275,7 +1275,7 @@ function exportHTML(){
   if(unlocked) document.querySelectorAll('[contenteditable="false"]').forEach(el=>el.setAttribute('contenteditable','true'));
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([snap],{type:'text/html'}));
-  a.download='andrew-benyacko-portfolio.html';
+  a.download='index.html';
   a.click(); URL.revokeObjectURL(a.href);
 }
 
