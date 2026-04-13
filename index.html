@@ -1268,6 +1268,12 @@ function disableEditing(){
   });
   document.getElementById('ed-bar').classList.remove('show');
 }
+function initNewEl(el){
+  el.classList.add('in');
+  if(unlocked){
+    el.querySelectorAll('[contenteditable]').forEach(ce=>ce.setAttribute('contenteditable','true'));
+  }
+}
 function exportHTML(){
   // Snapshot with editing off
   document.querySelectorAll('[contenteditable="true"]').forEach(el=>el.setAttribute('contenteditable','false'));
@@ -1353,6 +1359,7 @@ document.getElementById('add-skill-cat').addEventListener('click',()=>{
     <div class="skill-cat-title" contenteditable="true">${name}</div>
     <div class="tags"></div>
     <button class="add-btn" data-action="add-tag">+ Add Skill</button>`;
+  initNewEl(el);
   document.getElementById('skills-grid').insertBefore(el,document.getElementById('add-skill-cat'));
 });
 
@@ -1369,6 +1376,7 @@ document.getElementById('add-project').addEventListener('click',()=>{
       <button class="add-btn" data-action="add-ptag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Tag</button>
     </div>
     <a href="#" class="proj-link" contenteditable="true">View Project →</a>`;
+  initNewEl(el);
   document.getElementById('projects-grid').insertBefore(el,document.getElementById('add-project'));
 });
 
@@ -1384,6 +1392,7 @@ document.getElementById('add-edu').addEventListener('click',()=>{
     <div class="course-tags">
       <button class="add-btn" data-action="add-ctag" style="margin-top:0;padding:.2rem .5rem;font-size:.58rem;width:auto;">+ Course</button>
     </div>`;
+  initNewEl(el);
   document.getElementById('edu-list').insertBefore(el,document.getElementById('add-edu'));
 });
 
@@ -1396,7 +1405,8 @@ document.getElementById('add-exp').addEventListener('click',()=>{
     <div class="r-org" contenteditable="true">Organization</div>
     <div class="r-date" contenteditable="true">MMM YYYY — MMM YYYY</div>
     <div class="r-desc" contenteditable="true">Describe your responsibilities…</div>`;
-  document.getElementById('exp-list').appendChild(el);
+   initNewEl(el);
+   document.getElementById('exp-list').appendChild(el);
 });
 
 // Add publication/award
@@ -1408,7 +1418,8 @@ document.getElementById('add-pub').addEventListener('click',()=>{
     <div class="r-org" contenteditable="true">Venue/Organization</div>
     <div class="r-date" contenteditable="true">YYYY</div>
     <div class="r-desc" contenteditable="true">Brief description…</div>`;
-  document.getElementById('pub-list').appendChild(el);
+   initNewEl(el);
+   document.getElementById('pub-list').appendChild(el);
 });
 
 /* =====================================================
