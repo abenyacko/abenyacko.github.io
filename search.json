@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Your Name Here",
+    "section": "",
+    "text": "B.S. Computer Science & B.S. Mathematics, expected May 2027\nI’m a Computer Science and Mathematics double major at the University of West Florida, working at the intersection of cybersecurity analytics, applied statistics, and machine learning. My research so far has spanned network attack traffic analysis, incremental frequent pattern mining, and LLM-driven approaches to mass spectrometry data."
+  },
+  {
+    "objectID": "index.html#research",
+    "href": "index.html#research",
+    "title": "Your Name Here",
+    "section": "Research",
+    "text": "Research\nResearch Intern — National MagLab REU Program, Florida State University Summer 2026 · Mentor: David Butcher\n\nStudied LLM-driven analysis of mass spectrometry peptide sequences, focused on LLM integration for ion cyclotron resonance (ICR) data\nRan a comparative study of Bayesian Optimization frameworks (DeepSCP, LLAMBO, BOPrO, GPTuner) for tuning Casanovo de novo peptide sequencing hyperparameters\nBuilt Python client-server tooling to submit spectrometry data to each framework and benchmark predicted sequences against ground truth\n\nResearch Assistant — Data Analytics & Cybersecurity, University of West Florida January 2025 – Present\n\nAnalyze network traffic and security datasets to surface anomalous and high-risk behavior\nAutomate incremental data analysis pipelines in Python, improving reproducibility and cutting manual preprocessing time\nValidate analytical results for accuracy and consistency across evolving datasets\n\nStatistical Analyst — Statistics for Data Science, University of West Florida January 2025 – August 2025\n\nExploratory data analysis and regression modeling on real-world datasets\nCleaned, preprocessed, and validated structured data prior to analysis\nBuilt dashboards, visualizations, and written reports in R and RMarkdown"
+  },
+  {
+    "objectID": "index.html#publication",
+    "href": "index.html#publication",
+    "title": "Your Name Here",
+    "section": "Publication",
+    "text": "Publication\nSelecting Feature Subsets in Continuous Flow Network Attack Traffic Big Data Using Incremental Frequent Pattern Mining"
+  },
+  {
+    "objectID": "index.html#skills",
+    "href": "index.html#skills",
+    "title": "Your Name Here",
+    "section": "Skills",
+    "text": "Skills\nLanguages — Python, R, C++, Java, MATLAB Data & Analytics — Exploratory Data Analysis, Regression Modeling, Data Validation, PySpark Security — Network Traffic Analysis, Operating Systems Fundamentals Tools — Git, RStudio, RMarkdown, LaTeX, GitHub Copilot"
+  },
+  {
+    "objectID": "index.html#involvement",
+    "href": "index.html#involvement",
+    "title": "Your Name Here",
+    "section": "Involvement",
+    "text": "Involvement\n\nAIDA (Applied Intelligence & Data Analytics) Lab — Officer\nKugelman Honors Program — Scholar\n2026 Distinguished Undergraduate Researcher Award · Dean’s Honor Roll\n\n\nLinks\n\nResume (PDF)\nGitHub Repository"
+  }
+]
